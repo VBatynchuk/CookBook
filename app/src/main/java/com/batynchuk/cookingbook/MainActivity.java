@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.batynchuk.cookbook.R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(com.batynchuk.cookbook.R.id.toolbar);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         initView();
@@ -41,18 +41,18 @@ public class MainActivity extends AppCompatActivity
 //            }
 //        });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(com.batynchuk.cookbook.R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, com.batynchuk.cookbook.R.string.navigation_drawer_open, com.batynchuk.cookbook.R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(com.batynchuk.cookbook.R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     public void initView() {
-        mRecyclerView = (RecyclerView) findViewById(com.batynchuk.cookbook.R.id.recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mCookDBHelper = new CookDBHelper(this);
 
         mAdapter = new CookAdapter(Utils.getArrayListData(mCookDBHelper.getDataMain()), this);
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(com.batynchuk.cookbook.R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(com.batynchuk.cookbook.R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == com.batynchuk.cookbook.R.id.action_settings) {
+        if (id == R.id.action_settings) {
             return true;
         }
 
@@ -100,17 +100,17 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == com.batynchuk.cookbook.R.id.nav_recipes) {
+        if (id == R.id.nav_recipes) {
             // Handle the camera action
-        } else if (id == com.batynchuk.cookbook.R.id.nav_favourite) {
+        } else if (id == R.id.nav_favourite) {
 
-        } else if (id == com.batynchuk.cookbook.R.id.nav_shop_list) {
+        } else if (id == R.id.nav_shop_list) {
 
-        } else if (id == com.batynchuk.cookbook.R.id.nav_about) {
+        } else if (id == R.id.nav_about) {
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(com.batynchuk.cookbook.R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

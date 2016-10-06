@@ -28,9 +28,9 @@ public class CookAdapter extends RecyclerView.Adapter<CookAdapter.ViewHolder> {
 
         public ViewHolder(View view) {
             super(view);
-            mIconDish = (ImageView) view.findViewById(com.batynchuk.cookbook.R.id.icon_dish);
-            mDishName = (TextView) view.findViewById(com.batynchuk.cookbook.R.id.dish_name);
-            mRecipeOwner = (TextView) view.findViewById(com.batynchuk.cookbook.R.id.recipe_owner);
+            mIconDish = (ImageView) view.findViewById(R.id.icon_dish);
+            mDishName = (TextView) view.findViewById(R.id.dish_name);
+            mRecipeOwner = (TextView) view.findViewById(R.id.recipe_owner);
         }
     }
 
@@ -46,7 +46,7 @@ public class CookAdapter extends RecyclerView.Adapter<CookAdapter.ViewHolder> {
     @Override
     public CookAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(com.batynchuk.cookbook.R.layout.list_item_dish, parent, false);
+                .inflate(R.layout.list_item_dish, parent, false);
 
         return new ViewHolder(view);
     }
