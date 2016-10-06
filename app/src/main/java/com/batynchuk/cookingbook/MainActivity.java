@@ -8,11 +8,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.batynchuk.cookingbook.Utils.Utils;
+import com.batynchuk.cookingbook.utils.Utils;
 import com.batynchuk.cookingbook.data.CookDBHelper;
 
 public class MainActivity extends AppCompatActivity
@@ -53,12 +54,13 @@ public class MainActivity extends AppCompatActivity
 
     public void initView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setHasFixedSize(true);
         mCookDBHelper = new CookDBHelper(this);
 
         mAdapter = new CookAdapter(Utils.getArrayListData(mCookDBHelper.getDataMain()), this);
         mRecyclerView.setAdapter(mAdapter);
 
-        mLayoutManager = new GridLayoutManager(this, 2);
+        mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
     }
 

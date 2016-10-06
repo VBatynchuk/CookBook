@@ -1,5 +1,6 @@
 package com.batynchuk.cookingbook.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -44,4 +45,16 @@ public class CookDBHelper extends SQLiteAssetHelper {
         cursor.moveToFirst();
         return cursor;
     }
+
+//    public void goulashChange(){
+//        SQLiteDatabase database = getWritableDatabase();
+//        ContentValues contentValues =  new ContentValues();
+//        contentValues.put("image",
+//                "http://www.thesoupspoon.com/wp-content/uploads/2015/02/TSS_Web_Brands_Soup_BeefGoulash.jpg");
+//        database.update(
+//                "recipes",
+//                contentValues,
+//                "name =? ",
+//                new String[]{"Goulash Soup"});
+//    }
 }

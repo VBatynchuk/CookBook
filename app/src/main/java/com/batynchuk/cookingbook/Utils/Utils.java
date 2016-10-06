@@ -1,13 +1,9 @@
-package com.batynchuk.cookingbook.Utils;
+package com.batynchuk.cookingbook.utils;
 
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import com.batynchuk.cookingbook.model.Recipe;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
