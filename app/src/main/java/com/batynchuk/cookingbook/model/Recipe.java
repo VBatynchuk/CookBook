@@ -1,5 +1,7 @@
 package com.batynchuk.cookingbook.model;
 
+import com.batynchuk.cookingbook.R;
+
 /**
  * Created by Батинчук on 05.10.2016.
  */
@@ -9,15 +11,17 @@ public class Recipe {
     private int favourite;
     private int categoryId;
     private int time;
-    private int servings;
     private int calories;
+    private String servings;
     private String name;
     private String intro;
     private String instruction;
     private String image;
     private String link;
+    private String author;
 
-    public int isFavourite() {
+
+    public int getFavourite() {
         return favourite;
     }
 
@@ -41,11 +45,11 @@ public class Recipe {
         this.time = time;
     }
 
-    public int getServings() {
+    public String getServings() {
         return servings;
     }
 
-    public void setServings(int servings) {
+    public void setServings(String servings) {
         this.servings = servings;
     }
 
@@ -95,5 +99,13 @@ public class Recipe {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

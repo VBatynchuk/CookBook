@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/favourite_main_back" />
+    <item
+        android:width="42dp"
+        android:height="42dp"
+        android:drawable="@drawable/ic_favorite_white_48dp"
+        android:gravity="center" />
+</layer-list>

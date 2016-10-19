@@ -43,6 +43,31 @@ public class CookDBHelper extends SQLiteAssetHelper {
                 null);
 
         cursor.moveToFirst();
+        database.close();
+        return cursor;
+    }
+
+    public Cursor getIngredients(int position) {
+        SQLiteDatabase database = getReadableDatabase();
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+
+        String[] sqlSelect = {"0 _id", "name", "quantity", "unit"};
+
+//        String[] sqlSelect = {"*"};
+        String sqlTable = "ingredients";
+
+        queryBuilder.setTables(sqlTable);
+        Cursor cursor = queryBuilder.query(
+                database,
+                sqlSelect,
+                "recipe_id =?",
+                new String[]{Integer.toString(position)},
+                null,
+                null,
+                null);
+
+        cursor.moveToFirst();
+        database.close();
         return cursor;
     }
 

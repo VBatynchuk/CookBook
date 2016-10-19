@@ -15,27 +15,50 @@ public class Utils {
     public static ArrayList<Recipe> getArrayListData(Cursor cursor) {
         ArrayList<Recipe> arrayList = new ArrayList<>();
         if (cursor.moveToFirst()) {
-            do {
-                Recipe recipe = new Recipe();
-                recipe.setFavourite(cursor.getInt(cursor.getColumnIndex("favorite")));
-                recipe.setCategoryId(cursor.getInt(cursor.getColumnIndex("category_id")));
-                recipe.setTime(cursor.getInt(cursor.getColumnIndex("time")));
-                recipe.setServings(cursor.getInt(cursor.getColumnIndex("servings")));
-                recipe.setCalories(cursor.getInt(cursor.getColumnIndex("calories")));
-                recipe.setIntro(cursor.getString(cursor.getColumnIndex("intro")));
-                recipe.setInstruction(cursor.getString(cursor.getColumnIndex("instruction")));
-                recipe.setImage(cursor.getString(cursor.getColumnIndex("image")));
-                recipe.setLink(cursor.getString(cursor.getColumnIndex("link")));
-                recipe.setName(cursor.getString(cursor.getColumnIndex("name")));
+            try {
+                do {
+                    Recipe recipe = new Recipe();
+                    recipe.setFavourite(cursor.getInt(cursor.getColumnIndex("favorite")));
+                    recipe.setCategoryId(cursor.getInt(cursor.getColumnIndex("category_id")));
+                    recipe.setTime(cursor.getInt(cursor.getColumnIndex("time")));
+                    recipe.setServings(cursor.getString(cursor.getColumnIndex("servings")));
+                    recipe.setCalories(cursor.getInt(cursor.getColumnIndex("calories")));
+                    recipe.setIntro(cursor.getString(cursor.getColumnIndex("intro")));
+                    recipe.setInstruction(cursor.getString(cursor.getColumnIndex("instruction")));
+                    recipe.setImage(cursor.getString(cursor.getColumnIndex("image")));
+                    recipe.setLink(cursor.getString(cursor.getColumnIndex("link")));
+                    recipe.setName(cursor.getString(cursor.getColumnIndex("name")));
+                    recipe.setAuthor("Volodymyr Batynchuk");
 
-                arrayList.add(recipe);
+                    arrayList.add(recipe);
+                }
+                while (cursor.moveToNext());
+            } finally {
+                if (!cursor.isClosed())
+                    cursor.close();
             }
-            while (cursor.moveToNext());
         }
         return arrayList;
     }
-//
-//    public static ArrayList<Bitmap> getImageMain(Cursor cursor) {
-//
-//    }
+
+    public static ArrayList<String> getIngredientsList(Cursor cursor) {
+        ArrayList<String> arrayList = new ArrayList<>();
+        boolean cursorBool = cursor.moveToFirst();
+        if (cursorBool) {
+            try {
+                do {
+                    arrayList.add(cursor.getString(cursor.getColumnIndex("quantity")) + " "
+                            + cursor.getString(cursor.getColumnIndex("unit")) + " "
+                            + cursor.getString(cursor.getColumnIndex("name")));
+
+                } while (cursor.moveToNext());
+            } finally {
+                if (!cursor.isClosed())
+                    cursor.close();
+            }
+
+        }
+        return arrayList;
+    }
+
 }

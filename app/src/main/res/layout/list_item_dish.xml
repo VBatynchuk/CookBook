@@ -1,19 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/holder_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
-    android:orientation="vertical"
-    android:padding="8dp"
-    android:elevation="2dp"
     android:background="@drawable/rectangle_back"
-    android:id="@+id/holder_layout">
+    android:elevation="2dp"
+    android:orientation="vertical"
+    android:padding="8dp">
 
-    <com.batynchuk.cookingbook.utils.SquareImageView
-        android:id="@+id/icon_dish"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <com.batynchuk.cookingbook.utils.SquareImageView
+            android:id="@+id/icon_dish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:transitionName="dish_icon_transition" />
+
+        <ImageView
+            android:id="@+id/favorite_"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="8dp"
+            android:src="@drawable/favorite_main" />
+
+
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/dish_name"
@@ -22,6 +39,13 @@
         android:layout_marginTop="16dp"
         android:textSize="24sp"
         tools:text="Sweet potato hash" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/darker_gray" />
 
     <TextView
         android:id="@+id/recipe_owner"
