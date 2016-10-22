@@ -1,7 +1,9 @@
 package com.batynchuk.cookingbook.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -74,7 +76,10 @@ public class CookAdapter extends RecyclerView.Adapter<CookAdapter.ViewHolder> {
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, RecipeDetail.class);
                 intent.putExtra("recipe", holder.getAdapterPosition());
-                mContext.startActivity(intent);
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation((Activity) mContext, holder.mIconDish, "dish_icon_transition");
+                mContext.startActivity(intent, options.toBundle());
+//                mContext.startActivity(intent);
 
             }
         });

@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.batynchuk.cookingbook.data.CookDBHelper;
 import com.batynchuk.cookingbook.model.Recipe;
 
+import com.batynchuk.cookingbook.utils.AppBarStateChangeListener;
 import com.batynchuk.cookingbook.utils.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -36,7 +37,6 @@ import java.util.Calendar;
 public class RecipeDetail extends AppCompatActivity {
 
     public class RecipeViewHolder {
-        public TextView mInstruction;
         public TextView mServings;
         public TextView mTime;
         public TextView mIngredientsCount;
@@ -49,6 +49,7 @@ public class RecipeDetail extends AppCompatActivity {
         public CollapsingToolbarLayout collapsingToolbarLayout;
         public LinearLayout mIngredientsLinLayout;
         public LinearLayout mIngredientsTop;
+        public FloatingActionButton mFloatingActionButton;
 
         public RecipeViewHolder() {
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -58,13 +59,13 @@ public class RecipeDetail extends AppCompatActivity {
             mIngredientsCount = (TextView) findViewById(R.id.ingredients_count);
             mAddAllIcon = (ImageView) findViewById(R.id.add_remove_all_ingredients);
             mServings = (TextView) findViewById(R.id.servings_count);
-            mInstruction = (TextView) findViewById(R.id.instruction);
             mIngredientsLinLayout = (LinearLayout) findViewById(R.id.ingredients_layout);
             mAllToList = (TextView) findViewById(R.id.all_to_list_text_view);
             mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
             mAddedAnimationText = (TextView) findViewById(R.id.items_added);
             mIngredientsLinLayout = (LinearLayout) findViewById(R.id.ingredients_layout);
             mIngredientsTop = (LinearLayout) findViewById(R.id.ingredients_top);
+            mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
 
         }
     }
@@ -106,15 +107,6 @@ public class RecipeDetail extends AppCompatActivity {
         Toast toast = Toast.makeText(this, "time: " + time, Toast.LENGTH_SHORT);
         toast.show();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
     }
 
     private void initView() {
@@ -129,11 +121,21 @@ public class RecipeDetail extends AppCompatActivity {
             }
         });
 
-        mRecipeViewHolder.mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+        mRecipeViewHolder.mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                float offsetAlpha = (appBarLayout.getY() / mRecipeViewHolder.mAppBarLayout.getTotalScrollRange());
-                mRecipeViewHolder.mDishIcon.setAlpha(1 - (offsetAlpha * -1));
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        mRecipeViewHolder.mAppBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
+            @Override
+            public void onStateChanged(AppBarLayout appBarLayout, State state) {
+                if (state == State.COLLAPSED) {
+                    mRecipeViewHolder.mFloatingActionButton.setVisibility(View.VISIBLE);
+                } else {
+                    mRecipeViewHolder.mFloatingActionButton.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -175,8 +177,6 @@ public class RecipeDetail extends AppCompatActivity {
 //                        ViewGroup.LayoutParams.MATCH_PARENT,
 //                        height));
 
-        mRecipeViewHolder.mInstruction.setText(mRecipes.get(mPosition).getInstruction());
-
     }
 
     private void addedClickedAnimation(String text) {
@@ -212,7 +212,7 @@ public class RecipeDetail extends AppCompatActivity {
             mRemoveIngredientIcon[i] = (ImageView) detailIngredientView.findViewById(R.id.remove_ingredient);
 
             if (color) {
-                detailIngredientView.setBackgroundColor(getResources().getColor(R.color.ingredient_light));
+                detailIngredientView.setBackground(getResources().getDrawable(R.drawable.ingredient_light_back));
             } else {
                 detailIngredientView.setBackgroundColor(getResources().getColor(R.color.ingredient_dark));
             }

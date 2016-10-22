@@ -25,21 +25,82 @@
             android:paddingRight="24dp"
             android:paddingTop="16dp">
 
-            <ImageView
-                android:layout_width="1dp"
-                android:layout_height="42dp"
-                android:layout_weight="1"
-                android:src="@drawable/facebook" />
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
-            <ImageView
-                android:layout_width="1dp"
-                android:layout_height="42dp"
-                android:layout_weight="1"
-                android:src="@drawable/pinterest" />
+                <ImageView
+                    android:id="@+id/facebook_ic"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/facebook" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true">
+
+                    <ImageView
+                        android:id="@+id/facebook_shares_numb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/white_circle" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="20"
+                        android:textSize="12sp" />
+                </FrameLayout>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/pinterest" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true">
+
+                    <ImageView
+                        android:id="@+id/pinterest_shares_numb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/white_circle" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="2.6k"
+                        android:textSize="12sp" />
+                </FrameLayout>
+
+            </RelativeLayout>
 
             <TextView
-                android:layout_width="1dp"
-                android:layout_height="30dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="2"
                 android:gravity="center"
                 android:text="@string/shares_stub"
@@ -116,7 +177,7 @@
                 android:id="@+id/ingredients_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rectangle_back"
+                android:background="@drawable/ingredient_back"
                 android:gravity="center"
                 android:padding="8dp">
 
