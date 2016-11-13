@@ -1,12 +1,14 @@
 package com.batynchuk.cookingbook;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
@@ -16,215 +18,192 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.batynchuk.cookingbook.data.CookDBHelper;
 import com.batynchuk.cookingbook.model.Recipe;
-
 import com.batynchuk.cookingbook.utils.AppBarStateChangeListener;
 import com.batynchuk.cookingbook.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+
+import butterknife.BindColor;
+import butterknife.BindDrawable;
+import butterknife.BindString;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class RecipeDetail extends AppCompatActivity {
 
-    public class RecipeViewHolder {
-        public TextView mServings;
-        public TextView mTime;
-        public TextView mIngredientsCount;
-        public TextView mAllToList;
-        public TextView mAddedAnimationText;
-        public ImageView mDishIcon;
-        public ImageView mAddAllIcon;
-        public AppBarLayout mAppBarLayout;
-        public Toolbar mToolbar;
-        public CollapsingToolbarLayout collapsingToolbarLayout;
-        public LinearLayout mIngredientsLinLayout;
-        public LinearLayout mIngredientsTop;
-        public FloatingActionButton mFloatingActionButton;
-
-        public RecipeViewHolder() {
-            mToolbar = (Toolbar) findViewById(R.id.toolbar);
-            collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
-            mDishIcon = (ImageView) findViewById(R.id.icon_detail);
-            mTime = (TextView) findViewById(R.id.time);
-            mIngredientsCount = (TextView) findViewById(R.id.ingredients_count);
-            mAddAllIcon = (ImageView) findViewById(R.id.add_remove_all_ingredients);
-            mServings = (TextView) findViewById(R.id.servings_count);
-            mIngredientsLinLayout = (LinearLayout) findViewById(R.id.ingredients_layout);
-            mAllToList = (TextView) findViewById(R.id.all_to_list_text_view);
-            mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
-            mAddedAnimationText = (TextView) findViewById(R.id.items_added);
-            mIngredientsLinLayout = (LinearLayout) findViewById(R.id.ingredients_layout);
-            mIngredientsTop = (LinearLayout) findViewById(R.id.ingredients_top);
-            mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-
-        }
-    }
-
     private boolean mAllSelected;
-    private int mPosition;
 
-    public ImageView[] mAddIngredientIcon;
-    public ImageView[] mRemoveIngredientIcon;
+    @BindView(R.id.all_to_list_text_view)
+    TextView mAllToList;
+    @BindView(R.id.items_added)
+    TextView mAddedAnimationText;
+    @BindView(R.id.fab)
+    FloatingActionButton mFloatingActionButton;
+    @BindView(R.id.ingredients_layout)
+    LinearLayout mIngredientsLinLayout;
+    @BindView(R.id.ingredients_top)
+    LinearLayout mIngredientsTop;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.collapsing_toolbar_layout)
+    CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @BindView(R.id.icon_detail)
+    ImageView mDishIcon;
+    @BindView(R.id.time)
+    TextView mTime;
+    @BindView(R.id.ingredients_count)
+    TextView ingredientsCount;
+    @BindView(R.id.servings_count)
+    TextView servings;
+    @BindView(R.id.app_bar_layout)
+    AppBarLayout appBarLayout;
 
-    private View detailIngredientView;
-    private RecipeViewHolder mRecipeViewHolder;
-    private ShareActionProvider mShareActionProvider;
-    private ArrayList<Recipe> mRecipes;
+
+    private ImageView[] mAddIngredientIcon;
+    private ImageView[] mRemoveIngredientIcon;
+
+    private Recipe mRecipe;
     private ArrayList<String> mIngredients;
-    private Calendar mCalendarStart;
-    private Calendar mCalendarEnd;
 
+    private ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
-        mCalendarStart = Calendar.getInstance();
+        ButterKnife.bind(this);
 
-        CookDBHelper cookDBHelper = new CookDBHelper(this);
-        mPosition = getIntent().getIntExtra("recipe", 0);
-        mRecipes = Utils.getArrayListData(cookDBHelper.getDataMain());
-        mIngredients = Utils.getIngredientsList(cookDBHelper
-                .getIngredients(mPosition + 1));
+        Calendar timeTestStart = Calendar.getInstance();
 
-        mRecipeViewHolder = new RecipeViewHolder();
+        initData();
         initView();
+        initIngredient();
 
-        mCalendarEnd = Calendar.getInstance();
+        Calendar timeTestEnd = Calendar.getInstance();
 
-        long time = mCalendarEnd.getTimeInMillis() - mCalendarStart.getTimeInMillis();
+        long time = timeTestEnd.getTimeInMillis() - timeTestStart.getTimeInMillis();
         Toast toast = Toast.makeText(this, "time: " + time, Toast.LENGTH_SHORT);
         toast.show();
 
     }
 
-    private void initView() {
+    private void initData() {
 
-        setSupportActionBar(mRecipeViewHolder.mToolbar);
+        CookDBHelper cookDBHelper = new CookDBHelper(this);
+        int position = getIntent().getIntExtra("recipe", 0);
+
+        ArrayList<Recipe> mRecipes = Utils.getArrayListData(cookDBHelper.getDataMain());
+        mRecipe = mRecipes.get(position);
+        mIngredients = Utils.getIngredientsList(cookDBHelper
+                .getIngredients(position + 1));
+    }
+
+    private void initView() {
+//        ImageView addAllIcon = (ImageView) findViewById(R.id.add_remove_all_ingredients);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mRecipeViewHolder.mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 onBackPressed();
             }
         });
 
-        mRecipeViewHolder.mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        mRecipeViewHolder.mAppBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
+        appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, State state) {
                 if (state == State.COLLAPSED) {
-                    mRecipeViewHolder.mFloatingActionButton.setVisibility(View.VISIBLE);
-                } else {
-                    mRecipeViewHolder.mFloatingActionButton.setVisibility(View.GONE);
+                    mFloatingActionButton.setVisibility(View.VISIBLE);
+                } else if (state == State.EXPANDED || state == State.IDLE) {
+                    mFloatingActionButton.setVisibility(View.GONE);
                 }
             }
         });
 
-        mRecipeViewHolder.collapsingToolbarLayout.setTitle(mRecipes.get(mPosition).getName());
-        mRecipeViewHolder.collapsingToolbarLayout.setContentScrimColor(getResources().getColor(R.color.colorPrimary));
+        mCollapsingToolbarLayout.setTitle(mRecipe.getName());
+        mCollapsingToolbarLayout.setContentScrimColor(getResources().getColor(R.color.colorPrimary));
 
-        String url = mRecipes.get(mPosition).getImage();
-        Picasso.with(this).load(url).fit().centerCrop().into(mRecipeViewHolder.mDishIcon);
+        String url = mRecipe.getImage();
+        Picasso.with(this).load(url).fit().centerCrop().into(mDishIcon);
 
-        mRecipeViewHolder.mTime.setText(String.format("%s %s", mRecipes.get(mPosition).getTime(), "minutes"));
+        mTime.setText(String.format("%s %s", mRecipe.getTime(), "minutes"));
 
-        mRecipeViewHolder.mIngredientsCount.setText(String.format("%s %s", mIngredients.size(), "ingredients"));
+        ingredientsCount.setText(String.format("%s %s", mIngredients.size(), "ingredients"));
 
         mAllSelected = false;
 
-        mRecipeViewHolder.mAddAllIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAllSelected = !mAllSelected;
-                if (mAllSelected) {
-                    addedClickedAnimation(getResources().getString(R.string.items_added_text));
-                    mRecipeViewHolder.mAllToList.setText(getResources().getString(R.string.all_from_list));
-                } else {
-                    addedClickedAnimation(getResources().getString(R.string.items_removed_text));
-                    mRecipeViewHolder.mAllToList.setText(getResources().getString(R.string.all_to_list));
-                }
-                initIngredient();
-            }
-        });
+        servings.setText(mRecipe.getServings());
 
-        mRecipeViewHolder.mServings.setText(mRecipes.get(mPosition).getServings());
 
-        initIngredient();
-
-//        int height = mRecipeViewHolder.mIngredientsTop.getLayoutParams().height;
+//        int height = mIngredientsTop.getLayoutParams().height;
 //
-//        mRecipeViewHolder.mAddedAnimationText.setLayoutParams(
+//        mAddedAnimationText.setLayoutParams(
 //                new RelativeLayout.LayoutParams(
 //                        ViewGroup.LayoutParams.MATCH_PARENT,
 //                        height));
 
     }
 
-    private void addedClickedAnimation(String text) {
-
-        mRecipeViewHolder.mAddedAnimationText.setText(text);
-        mRecipeViewHolder.mIngredientsTop.setVisibility(View.GONE);
-        mRecipeViewHolder.mIngredientsTop.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mRecipeViewHolder.mIngredientsTop.setVisibility(View.VISIBLE);
-            }
-        }, 3000);
-
-    }
+    @BindDrawable(R.drawable.ingredient_light_back)
+    Drawable ingredientLightBack;
+    @BindColor(R.color.ingredient_dark)
+    int ingredientDark;
 
     private void initIngredient() {
-        boolean color = true;
 
-        mRecipeViewHolder.mIngredientsLinLayout.removeAllViews();
-        // int iconResource = addedIngredient(mAllSelected);
+        mIngredientsLinLayout.removeAllViews();
 
         mAddIngredientIcon = new ImageView[mIngredients.size()];
         mRemoveIngredientIcon = new ImageView[mIngredients.size()];
+
+        View detailIngredientView;
+
         for (int i = 0; i < mIngredients.size(); i++) {
 
             final int index = i;
 
-            LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater =
+                    (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             detailIngredientView = layoutInflater.inflate(R.layout.detail_ingredient_item, null);
 
-            mAddIngredientIcon[i] = (ImageView) detailIngredientView.findViewById(R.id.add_ingredient);
-            mRemoveIngredientIcon[i] = (ImageView) detailIngredientView.findViewById(R.id.remove_ingredient);
+            mAddIngredientIcon[i] =
+                    (ImageView) detailIngredientView.findViewById(R.id.add_ingredient);
+            mRemoveIngredientIcon[i] =
+                    (ImageView) detailIngredientView.findViewById(R.id.remove_ingredient);
 
-            if (color) {
-                detailIngredientView.setBackground(getResources().getDrawable(R.drawable.ingredient_light_back));
+            if (index % 2 == 0) { // change color for odd positions
+                detailIngredientView.setBackground(ingredientLightBack);
             } else {
-                detailIngredientView.setBackgroundColor(getResources().getColor(R.color.ingredient_dark));
+                detailIngredientView.setBackgroundColor(ingredientDark);
             }
 
             if (mAllSelected) {
                 mRemoveIngredientIcon[i].setVisibility(View.VISIBLE);
             }
 
-            TextView textView = (TextView) detailIngredientView.findViewById(R.id.ingredients_list_item_text);
-            textView.setText(mIngredients.get(i));
+            TextView ingredientsItem =
+                    (TextView) detailIngredientView.findViewById(R.id.ingredients_list_item_text);
+            ingredientsItem.setText(mIngredients.get(i));
 
-            mRecipeViewHolder.mIngredientsLinLayout.addView(detailIngredientView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            mIngredientsLinLayout.addView(detailIngredientView, 0,
+                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT));
 
             mAddIngredientIcon[i].setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -244,8 +223,35 @@ public class RecipeDetail extends AppCompatActivity {
                 }
             });
 
-            color = !color;
         }
+
+    }
+
+    private void addedClickedAnimation(String text) {
+
+        mAddedAnimationText.setText(text);
+        mIngredientsTop.animate()
+                .alpha(0f)
+                .setDuration(1000)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        mIngredientsTop.animate()
+                                .alpha(1f)
+                                .setDuration(1000);
+//                                .setStartDelay(2000);
+                    }
+                });
+
+
+//        mRecipeViewHolder.mIngredientsTop.setVisibility(View.GONE);
+//        mRecipeViewHolder.mIngredientsTop.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                mRecipeViewHolder.mIngredientsTop.setVisibility(View.VISIBLE);
+//            }
+//        }, 3000);
 
     }
 
@@ -269,7 +275,7 @@ public class RecipeDetail extends AppCompatActivity {
         // populate the share intent with data
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, mRecipes.get(mPosition).getName());
+        shareIntent.putExtra(Intent.EXTRA_TEXT, mRecipe.getName());
         return shareIntent;
     }
 
@@ -279,4 +285,49 @@ public class RecipeDetail extends AppCompatActivity {
         }
     }
 
+//    @Override
+//    public void onClick(View view) {
+//        switch (view.getId()) {
+//            case R.id.add_remove_all_ingredients:
+//                mAllSelected = !mAllSelected;
+//                if (mAllSelected) {
+//                    addedClickedAnimation(getResources().getString(R.string.items_added_text));
+//                    mAllToList.setText(getResources().getString(R.string.all_from_list));
+//                } else {
+//                    addedClickedAnimation(getResources().getString(R.string.items_removed_text));
+//                    mAllToList.setText(getResources().getString(R.string.all_to_list));
+//                }
+//                initIngredient();
+//                break;
+//            case R.id.fab:
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//                break;
+////            case R.id.toolbar:
+////                onBackPressed();
+////                break;
+//        }
+//    }
+
+    @BindString(R.string.items_added_text)
+    String itemsAddedText;
+    @BindString(R.string.items_removed_text)
+    String itemsRemovedText;
+    @BindString(R.string.all_from_list)
+    String allFromList;
+    @BindString(R.string.all_to_list)
+    String allToList;
+
+    @OnClick(R.id.add_remove_all_ingredients)
+    public void ingredientClick() {
+        mAllSelected = !mAllSelected;
+        if (mAllSelected) {
+            addedClickedAnimation(itemsAddedText);
+            mAllToList.setText(allFromList);
+        } else {
+            addedClickedAnimation(itemsRemovedText);
+            mAllToList.setText(allToList);
+        }
+        initIngredient();
+    }
 }

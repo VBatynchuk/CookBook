@@ -163,12 +163,15 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:animateLayoutChanges="true">
 
             <TextView
                 android:id="@+id/items_added"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="58dp"
+                android:background="@drawable/ingredient_back"
+                android:gravity="center_vertical"
                 android:padding="8dp"
                 android:textSize="20sp"
                 tools:text="@string/items_added_text" />
